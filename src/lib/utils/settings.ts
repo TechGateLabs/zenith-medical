@@ -76,7 +76,7 @@ export class SettingsManager {
         settings = await prisma.systemSettings.create({
           data: {
             id: 'default-settings',
-            primaryPhone: '249 806 0128',
+            primaryPhone: '613-212-7433',
             adminEmail: 'admin@zenithmedical.ca',
             address: 'Unit 216, 1980 Ogilvie Road, Gloucester, Ottawa, K1J 9L3',
             businessHours: 'Mon-Fri 8AM-6PM, Sat 9AM-2PM',
@@ -102,7 +102,7 @@ export class SettingsManager {
       // Return fallback settings if database fails
       return {
         id: 'fallback',
-        primaryPhone: '249 806 0128',
+        primaryPhone: '613-212-7433',
         adminEmail: 'admin@zenithmedical.ca',
         address: 'Unit 216, 1980 Ogilvie Road, Gloucester, Ottawa, K1J 9L3',
         businessHours: 'Mon-Fri 8AM-6PM, Sat 9AM-2PM',
@@ -113,7 +113,7 @@ export class SettingsManager {
         passwordExpiry: 90,
         homepageImageUrl: '/images/home.webp',
         appointmentBookingUrl: 'https://zenithmedical.cortico.ca/',
-        patientIntakeUrl: 'https://ocean.cognisantmd.com/eRequest/fc7408b9-fa27-4d25-87ea-c403cd903227',
+        patientIntakeUrl: 'https://zenithmedical.cortico.ca/patient/forms/Shortened+Patient+Registration+Form/',
         whyChooseUsImageUrl: undefined,
         aboutMissionImageUrl: undefined,
         servicesPaymentImageUrl: undefined,
@@ -138,7 +138,7 @@ export class SettingsManager {
         },
         create: {
           id: 'default-settings',
-          primaryPhone: '249 806 0128',
+          primaryPhone: '613-212-7433',
           adminEmail: 'admin@zenithmedical.ca',
           businessHours: 'Mon-Fri 8AM-6PM, Sat 9AM-2PM',
           timezone: 'America/Toronto',

@@ -210,6 +210,113 @@ export default async function Home() {
       </section>
 
       <div className="container mx-auto px-4 py-12">
+        {/* Meet Our Doctors */}
+        {doctors.length > 0 && (
+          <section className="mb-16">
+            <div className="max-w-6xl mx-auto">
+              {/* Section Badge */}
+              <div className="text-center mb-12">
+                <div className="inline-flex items-center justify-center px-4 py-2 bg-teal-50 border border-teal-200 rounded-full mb-6">
+                  <span className="text-sm font-semibold text-teal-700 uppercase tracking-wider">
+                    Our Medical Team
+                  </span>
+                </div>
+                <h2 className="text-4xl lg:text-5xl font-bold text-slate-800 mb-6 leading-tight">
+                  Meet Our Doctors
+                </h2>
+                <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+                  Our experienced physicians are dedicated to providing
+                  exceptional care for you and your family
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {doctors.slice(0, 6).map((doctor) => {
+                  const slug = doctor.name
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")
+                    .replace(/[^a-z0-9-]/g, "");
+                  return (
+                    <div
+                      key={doctor.id}
+                      className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                    >
+                      {/* Doctor Photo */}
+                      <div className="relative h-64 bg-slate-100">
+                        {doctor.photoUrl ? (
+                          <Image
+                            src={doctor.photoUrl}
+                            alt={doctor.name}
+                            fill
+                            className="object-cover object-top"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <svg
+                              className="h-24 w-24 text-slate-300"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={1.5}
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                              />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+                      <div className="p-6">
+                        <div className="mb-4">
+                          <h3 className="text-xl font-bold text-slate-800 mb-1">
+                            {doctor.name}
+                          </h3>
+                          <p className="text-blue-600 font-medium mb-3">
+                            {doctor.title}
+                          </p>
+                          <p className="text-slate-600 text-sm line-clamp-3 leading-relaxed">
+                            {doctor.bio ||
+                              doctor.doctor?.professionalBio ||
+                              "Dedicated healthcare professional committed to your well-being."}
+                          </p>
+                        </div>
+
+                        <div className="mt-4 pt-4 border-t border-slate-100">
+                          <a
+                            href={
+                              doctor.doctor?.bookingUrl || appointmentBookingUrl
+                            }
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full inline-flex items-center justify-center px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all shadow-md hover:shadow-lg transform active:scale-95"
+                          >
+                            <svg
+                              className="mr-2 h-5 w-5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z"
+                              />
+                            </svg>
+                            Book Appointment
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Medical Services Section */}
         {services.length > 0 && (
           <section className="mb-16">
@@ -372,113 +479,6 @@ export default async function Home() {
                     />
                   </svg>
                 </a>
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Meet Our Doctors */}
-        {doctors.length > 0 && (
-          <section className="mb-16">
-            <div className="max-w-6xl mx-auto">
-              {/* Section Badge */}
-              <div className="text-center mb-12">
-                <div className="inline-flex items-center justify-center px-4 py-2 bg-teal-50 border border-teal-200 rounded-full mb-6">
-                  <span className="text-sm font-semibold text-teal-700 uppercase tracking-wider">
-                    Our Medical Team
-                  </span>
-                </div>
-                <h2 className="text-4xl lg:text-5xl font-bold text-slate-800 mb-6 leading-tight">
-                  Meet Our Doctors
-                </h2>
-                <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-                  Our experienced physicians are dedicated to providing
-                  exceptional care for you and your family
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {doctors.slice(0, 6).map((doctor) => {
-                  const slug = doctor.name
-                    .toLowerCase()
-                    .replace(/\s+/g, "-")
-                    .replace(/[^a-z0-9-]/g, "");
-                  return (
-                    <div
-                      key={doctor.id}
-                      className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-                    >
-                      {/* Doctor Photo */}
-                      <div className="relative h-64 bg-slate-100">
-                        {doctor.photoUrl ? (
-                          <Image
-                            src={doctor.photoUrl}
-                            alt={doctor.name}
-                            fill
-                            className="object-cover object-top"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center">
-                            <svg
-                              className="h-24 w-24 text-slate-300"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={1.5}
-                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                              />
-                            </svg>
-                          </div>
-                        )}
-                      </div>
-                      <div className="p-6">
-                        <div className="mb-4">
-                          <h3 className="text-xl font-bold text-slate-800 mb-1">
-                            {doctor.name}
-                          </h3>
-                          <p className="text-blue-600 font-medium mb-3">
-                            {doctor.title}
-                          </p>
-                          <p className="text-slate-600 text-sm line-clamp-3 leading-relaxed">
-                            {doctor.bio ||
-                              doctor.doctor?.professionalBio ||
-                              "Dedicated healthcare professional committed to your well-being."}
-                          </p>
-                        </div>
-
-                        <div className="mt-4 pt-4 border-t border-slate-100">
-                          <a
-                            href={
-                              doctor.doctor?.bookingUrl || appointmentBookingUrl
-                            }
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-full inline-flex items-center justify-center px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-all shadow-md hover:shadow-lg transform active:scale-95"
-                          >
-                            <svg
-                              className="mr-2 h-5 w-5"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z"
-                              />
-                            </svg>
-                            Book Appointment
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
               </div>
             </div>
           </section>

@@ -8,7 +8,7 @@ export async function getPrimaryPhone(): Promise<string> {
     return await settingsManager.getPrimaryPhone();
   } catch (error) {
     console.error('Error getting primary phone:', error);
-    return '249 806 0128'; // Fallback
+    return '613-212-7433'; // Fallback
   }
 }
 
@@ -92,10 +92,10 @@ export async function getAppointmentBookingUrl(): Promise<string> {
 export async function getPatientIntakeUrl(): Promise<string> {
   try {
     const settings = await settingsManager.getSettings();
-    return settings.patientIntakeUrl || 'https://ocean.cognisantmd.com/eRequest/fc7408b9-fa27-4d25-87ea-c403cd903227';
+    return settings.patientIntakeUrl || 'https://zenithmedical.cortico.ca/patient/forms/Shortened+Patient+Registration+Form/';
   } catch (error) {
     console.error('Error getting patient intake URL:', error);
-    return 'https://ocean.cognisantmd.com/eRequest/fc7408b9-fa27-4d25-87ea-c403cd903227'; // Fallback
+    return 'https://zenithmedical.cortico.ca/patient/forms/Shortened+Patient+Registration+Form/'; // Fallback
   }
 }
 
@@ -167,7 +167,7 @@ export async function getAllSettings() {
     // Return fallback settings
     return {
       id: 'fallback',
-      primaryPhone: '249 806 0128',
+      primaryPhone: '613-212-7433',
       emergencyPhone: undefined,
       faxNumber: undefined,
       adminEmail: 'admin@zenithmedical.ca',
@@ -179,7 +179,7 @@ export async function getAllSettings() {
       passwordExpiry: 90,
       homepageImageUrl: '/images/home.webp',
       appointmentBookingUrl: 'https://zenithmedical.cortico.ca/',
-      patientIntakeUrl: 'https://ocean.cognisantmd.com/eRequest/fc7408b9-fa27-4d25-87ea-c403cd903227',
+      patientIntakeUrl: 'https://zenithmedical.cortico.ca/patient/forms/Shortened+Patient+Registration+Form/',
       ipWhitelist: undefined,
       createdAt: new Date(),
       updatedAt: new Date()

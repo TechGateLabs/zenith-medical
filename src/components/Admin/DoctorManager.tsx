@@ -187,6 +187,9 @@ export default function DoctorManager() {
     TeamMember[]
   >([]);
   const [photoChanged, setPhotoChanged] = useState(false);
+  const [pendingPhotoUrl, setPendingPhotoUrl] = useState<string | undefined>(
+    undefined
+  );
 
   const { handleApiError } = useApiAuth();
 
@@ -293,12 +296,14 @@ export default function DoctorManager() {
       bookingUrl: "",
     });
     setPhotoChanged(false);
+    setPendingPhotoUrl(undefined);
     setShowModal(true);
   };
 
   const handleEditDoctor = (doctor: TeamMember) => {
     setEditingDoctor(doctor);
     setPhotoChanged(false);
+    setPendingPhotoUrl(undefined);
     if (doctor.doctor) {
       setFormData({
         teamMemberId: doctor.id,
@@ -370,8 +375,22 @@ export default function DoctorManager() {
           formData
         );
         if (response.success) {
+          // Persist the uploaded photo onto the team member record
+          if (pendingPhotoUrl && formData.teamMemberId) {
+            try {
+              await apiCall(
+                `/api/admin/content/team/${formData.teamMemberId}`,
+                "PUT",
+                { photoUrl: pendingPhotoUrl }
+              );
+            } catch (photoError) {
+              console.error("Failed to attach photo to team member:", photoError);
+            }
+          }
+
           toast.success("Doctor profile created successfully");
           setShowModal(false);
+          setPendingPhotoUrl(undefined);
           // Fetch fresh data directly
           const freshResponse = await apiCall(
             "/api/admin/content/doctors",
@@ -677,7 +696,7 @@ export default function DoctorManager() {
             </select>
           </div>
 
-          {/* Photo Upload - Moved to top for prominence */}
+          {/* Photo Upload */}
           <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Doctor Photo <span className="text-red-500">*</span>
@@ -685,42 +704,62 @@ export default function DoctorManager() {
             <p className="text-sm text-gray-500 mb-3">
               Upload a professional photo for the doctor. This photo will be
               displayed on their profile page and in the doctors listing.
-              {!editingDoctor &&
-                " For new doctor profiles, a photo is highly recommended."}
+              Recommended size: under 4 MB. If your photo is larger, please
+              compress it (e.g. with{" "}
+              <a
+                href="https://squoosh.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline"
+              >
+                squoosh.app
+              </a>
+              ) before uploading.
             </p>
-            <div className="bg-white p-3 rounded-lg border border-gray-300">
-              <ImageUpload
-                uploadType="team-member"
-                entityId={editingDoctor?.id || formData.teamMemberId}
-                currentImageUrl={editingDoctor?.photoUrl}
-                onUploadSuccess={(uploadResult) => {
-                  // Update the team member's photo URL
-                  if (editingDoctor) {
-                    // Update the local state to reflect the new photo
-                    setEditingDoctor({
-                      ...editingDoctor,
-                      photoUrl: uploadResult.secure_url,
-                    });
-                    setPhotoChanged(true);
+            {!editingDoctor && !formData.teamMemberId ? (
+              <div className="bg-white p-4 rounded-lg border border-dashed border-gray-300 text-center text-sm text-gray-500">
+                Please select a team member above before uploading a photo.
+              </div>
+            ) : (
+              <div className="bg-white p-3 rounded-lg border border-gray-300">
+                <ImageUpload
+                  uploadType="team-member"
+                  entityId={editingDoctor?.id || formData.teamMemberId}
+                  currentImageUrl={
+                    pendingPhotoUrl ?? editingDoctor?.photoUrl
                   }
-                  toast.success("Photo uploaded successfully");
-                }}
-                onUploadError={(error) => {
-                  toast.error(`Failed to upload photo: ${error}`);
-                }}
-                onImageRemove={() => {
-                  if (editingDoctor) {
-                    setEditingDoctor({
-                      ...editingDoctor,
-                      photoUrl: undefined,
-                    });
-                    setPhotoChanged(true);
-                  }
-                  toast.success("Photo removed");
-                }}
-                className="max-w-xs"
-              />
-            </div>
+                  maxFileSize={4}
+                  onUploadSuccess={(uploadResult) => {
+                    if (editingDoctor) {
+                      setEditingDoctor({
+                        ...editingDoctor,
+                        photoUrl: uploadResult.secure_url,
+                      });
+                      setPhotoChanged(true);
+                    } else {
+                      setPendingPhotoUrl(uploadResult.secure_url);
+                    }
+                    toast.success("Photo uploaded successfully");
+                  }}
+                  onUploadError={(error) => {
+                    toast.error(`Failed to upload photo: ${error}`);
+                  }}
+                  onImageRemove={() => {
+                    if (editingDoctor) {
+                      setEditingDoctor({
+                        ...editingDoctor,
+                        photoUrl: undefined,
+                      });
+                      setPhotoChanged(true);
+                    } else {
+                      setPendingPhotoUrl(undefined);
+                    }
+                    toast.success("Photo removed");
+                  }}
+                  className="max-w-xs"
+                />
+              </div>
+            )}
           </div>
 
           {/* Professional Bio */}
