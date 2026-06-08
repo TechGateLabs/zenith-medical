@@ -114,7 +114,7 @@ export default function Contact() {
                     <svg className="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z" />
                     </svg>
-                    Request Appointment
+                    Book Appointment
                   </a>
                 </div>
               </div>
@@ -173,7 +173,7 @@ export default function Contact() {
                           <p>You can also use our online services:</p>
                           <ul className="mt-2 space-y-1">
                             <li>• Complete registration forms online</li>
-                            <li>• Request appointments through our booking system</li>
+                            <li>• Book appointments through our booking system</li>
                             <li>• Access your health information securely</li>
                           </ul>
                         </div>

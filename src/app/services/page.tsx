@@ -64,15 +64,6 @@ async function getServices(): Promise<Service[]> {
       orderIndex: 2,
       published: true,
     },
-    {
-      id: "3",
-      title: "Minor Procedures",
-      description:
-        "Quick and efficient minor surgical procedures performed in our clinic.",
-      features: ["Sutures", "Wart removal", "Biopsies"],
-      orderIndex: 3,
-      published: true,
-    },
   ];
 }
 
@@ -390,7 +381,7 @@ export default async function Services() {
                       d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2z"
                     />
                   </svg>
-                  Request Appointment
+                  Book Appointment
                 </a>
                 <a
                   href={patientIntakeUrl}

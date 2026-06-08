@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Script from 'next/script'
 import Layout from '../../components/Layout/Layout'
 import Link from 'next/link'
 import { useAppointmentUrls } from '@/lib/hooks/useSettings'
@@ -200,6 +201,20 @@ export default function Blog() {
           </div>
         </div>
       </section>
+
+      {/* Soro SEO Blog Widget */}
+      <section className="py-16 bg-white border-b border-slate-200">
+        <div className="container mx-auto px-4">
+          <div className="max-w-6xl mx-auto">
+            <div id="soro-blog"></div>
+          </div>
+        </div>
+      </section>
+      <Script
+        src="https://app.trysoro.com/api/embed/64d8c5bf-61d4-4157-ae42-455262cd65be"
+        strategy="afterInteractive"
+        defer
+      />
 
       {/* Category Filter */}
       <section className="py-12 bg-white border-b border-slate-200">
