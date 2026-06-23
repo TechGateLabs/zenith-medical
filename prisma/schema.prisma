@@ -193,6 +193,23 @@ model UninsuredService {
   @@map("uninsured_services")
 }
 
+model ClinicLocation {
+  id            String   @id @default(cuid())
+  name          String
+  address       String
+  phone         String?
+  fax           String?
+  hours         String?
+  mapsQuery     String?
+  orderIndex    Int      @default(0)
+  isPrimary     Boolean  @default(false)
+  published     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("clinic_locations")
+}
+
 model SystemSettings {
   id                   String   @id @default(cuid())
   primaryPhone         String

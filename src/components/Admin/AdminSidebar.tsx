@@ -27,6 +27,7 @@ import {
   Menu,
   X,
   DollarSign,
+  MapPin,
 } from 'lucide-react';
 
 interface NavigationItem {
@@ -93,6 +94,11 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ user }) => {
           name: 'Doctor Profiles',
           href: '/admin/content/doctors',
           icon: Users,
+        },
+        {
+          name: 'Clinic Locations',
+          href: '/admin/content/locations',
+          icon: MapPin,
         },
       ],
     },

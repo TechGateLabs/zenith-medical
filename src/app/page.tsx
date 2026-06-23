@@ -66,6 +66,31 @@ async function getDoctors(): Promise<Doctor[]> {
   }
 }
 
+interface ClinicLocation {
+  id: string;
+  name: string;
+  address: string;
+  phone: string | null;
+  fax: string | null;
+  hours: string | null;
+  mapsQuery: string | null;
+  isPrimary: boolean;
+}
+
+async function getLocations(): Promise<ClinicLocation[]> {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL || ""}/api/locations`,
+      { cache: "no-store" }
+    );
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.data || [];
+  } catch {
+    return [];
+  }
+}
+
 export const metadata = generateSEOMetadata({
   ...PAGE_METADATA.home,
   canonical: "/",
@@ -80,6 +105,23 @@ export default async function Home() {
   const acceptingNewPatients = await getAcceptingNewPatients();
   const services = await getServices();
   const doctors = await getDoctors();
+  const locations = await getLocations();
+
+  const fallbackLocations: ClinicLocation[] =
+    locations.length > 0
+      ? locations
+      : [
+          {
+            id: "fallback",
+            name: "Zenith Medical Centre",
+            address: "Unit 216, 1980 Ogilvie Road, Gloucester, Ottawa, K1J 9L3",
+            phone: null,
+            fax: null,
+            hours: null,
+            mapsQuery: null,
+            isPrimary: true,
+          },
+        ];
 
   return (
     <Layout className="bg-slate-50">
@@ -761,17 +803,71 @@ export default async function Home() {
                 </a>
               </div>
 
-              {/* Google Maps Section */}
+              {/* Clinic Locations Section */}
               <div className="bg-white rounded-xl p-6 shadow-lg">
-                <h3 className="text-2xl font-bold text-slate-800 mb-4 text-center">
-                  Find Our Location
+                <h3 className="text-2xl font-bold text-slate-800 mb-2 text-center">
+                  {fallbackLocations.length > 1
+                    ? "Our Locations"
+                    : "Find Our Location"}
                 </h3>
-                <div className="max-w-2xl mx-auto">
-                  <GoogleMapsClient
-                    address="Unit 216, 1980 Ogilvie Road, Gloucester, Ottawa, K1J 9L3"
-                    className="w-full h-64 rounded-lg"
-                    height="250px"
-                  />
+                {fallbackLocations.length > 1 && (
+                  <p className="text-center text-slate-600 mb-6">
+                    Visit us at any of our {fallbackLocations.length}{" "}
+                    clinic locations.
+                  </p>
+                )}
+                <div
+                  className={`grid gap-6 ${
+                    fallbackLocations.length > 1
+                      ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+                      : "max-w-2xl mx-auto"
+                  }`}
+                >
+                  {fallbackLocations.map((loc) => (
+                    <div
+                      key={loc.id}
+                      className="bg-slate-50 rounded-xl overflow-hidden border border-slate-200"
+                    >
+                      <div className="p-4 border-b border-slate-200">
+                        <h4 className="text-lg font-bold text-slate-800 mb-1">
+                          {loc.name}
+                        </h4>
+                        <p className="text-sm text-slate-600 mb-2">
+                          {loc.address}
+                        </p>
+                        <div className="text-xs text-slate-600 space-y-0.5">
+                          {loc.phone && (
+                            <div>
+                              <span className="font-semibold">Phone:</span>{" "}
+                              <a
+                                href={`tel:${loc.phone.replace(/\s/g, "")}`}
+                                className="text-blue-600 hover:underline"
+                              >
+                                {loc.phone}
+                              </a>
+                            </div>
+                          )}
+                          {loc.fax && (
+                            <div>
+                              <span className="font-semibold">Fax:</span>{" "}
+                              {loc.fax}
+                            </div>
+                          )}
+                          {loc.hours && (
+                            <div>
+                              <span className="font-semibold">Hours:</span>{" "}
+                              {loc.hours}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <GoogleMapsClient
+                        address={loc.mapsQuery || loc.address}
+                        className="w-full"
+                        height="220px"
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
