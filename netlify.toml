@@ -5,6 +5,9 @@
 [build.environment]
   NODE_VERSION = "22"
   BUN_VERSION = "1.2.19"
+  # These public clinic labels/contact details already appear in the source.
+  # Keep scanning enabled for database, auth, encryption, and API credentials.
+  SECRETS_SCAN_OMIT_KEYS = "CLOUDINARY_CLOUD_NAME,RESEND_FROM_NAME,STAFF_NOTIFICATION_EMAILS"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
