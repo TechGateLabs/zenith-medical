@@ -71,6 +71,7 @@ interface ClinicLocation {
   name: string;
   address: string;
   phone: string | null;
+  email: string | null;
   fax: string | null;
   hours: string | null;
   mapsQuery: string | null;
@@ -116,6 +117,7 @@ export default async function Home() {
             name: "Zenith Medical Centre",
             address: "Unit 216, 1980 Ogilvie Road, Gloucester, Ottawa, K1J 9L3",
             phone: null,
+            email: null,
             fax: null,
             hours: null,
             mapsQuery: null,
@@ -847,6 +849,7 @@ export default async function Home() {
                               </a>
                             </div>
                           )}
+                          {loc.email && <div><span className="font-medium">Email:</span> <a className="text-blue-600 hover:underline break-all" href={`mailto:${loc.email}`}>{loc.email}</a></div>}
                           {loc.fax && (
                             <div>
                               <span className="font-semibold">Fax:</span>{" "}

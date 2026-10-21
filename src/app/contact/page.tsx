@@ -30,6 +30,7 @@ export default function Contact() {
           name: 'Zenith Medical Centre',
           address: fallbackAddress,
           phone: phoneLoading ? null : primaryPhone,
+          email: null as string | null,
           fax: null as string | null,
           hours: null as string | null,
           mapsQuery: null as string | null,
@@ -57,59 +58,23 @@ export default function Contact() {
           {/* Top-level: General contact + Quick actions */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
             <div className="bg-white rounded-2xl p-8 shadow-lg">
-              <h2 className="text-2xl font-bold text-slate-800 mb-6">Get in Touch</h2>
-              <div className="space-y-6">
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <svg className="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-slate-800 mb-1">Phone</h3>
-                    <p className="text-slate-600">
-                      <a
-                        href={`tel:${(primary?.phone || primaryPhone).replace(/\s/g, '')}`}
-                        className="text-blue-600 hover:underline"
-                      >
-                        {phoneLoading && !primary?.phone
-                          ? 'Loading...'
-                          : primary?.phone || primaryPhone}
-                      </a>
-                    </p>
-                  </div>
-                </div>
-
-                {primary?.fax && (
-                  <div className="flex items-start space-x-4">
-                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <svg className="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11h2m-1-1v2M5 19V5a2 2 0 012-2h10a2 2 0 012 2v6m-9 8h6a2 2 0 002-2v-4a2 2 0 00-2-2H8a2 2 0 00-2 2v4a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-slate-800 mb-1">Fax</h3>
-                      <p className="text-slate-600">{primary.fax}</p>
-                    </div>
-                  </div>
-                )}
-
-                <div className="flex items-start space-x-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <svg className="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-slate-800 mb-1">Email</h3>
-                    <p className="text-slate-600">
-                      <a href={`mailto:${adminEmail}`} className="text-blue-600 hover:underline">
-                        {emailLoading ? 'Loading...' : adminEmail}
-                      </a>
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <h2 className="text-2xl font-bold text-slate-800 mb-6">{hasLocations ? primary?.name : 'Get in Touch'}</h2>
+              <dl className="space-y-6 text-slate-600">
+                {(!hasLocations || primary?.phone) && <div>
+                  <dt className="text-lg font-semibold text-slate-800 mb-1">Clinic phone</dt>
+                  <dd><a className="text-blue-600 hover:underline" href={`tel:${(hasLocations ? primary?.phone || '' : primaryPhone).replace(/[^+\d]/g, '')}`}>
+                    {hasLocations ? primary?.phone : phoneLoading ? 'Loading...' : primaryPhone}
+                  </a></dd>
+                </div>}
+                {primary?.fax && <div><dt className="text-lg font-semibold text-slate-800 mb-1">Fax</dt><dd>{primary.fax}</dd></div>}
+                {(!hasLocations || primary?.email) && <div>
+                  <dt className="text-lg font-semibold text-slate-800 mb-1">{hasLocations ? 'Clinic email' : 'Email'}</dt>
+                  <dd><a className="text-blue-600 hover:underline break-all" href={`mailto:${hasLocations ? primary?.email : adminEmail}`}>
+                    {hasLocations ? primary?.email : emailLoading ? 'Loading...' : adminEmail}
+                  </a></dd>
+                </div>}
+              </dl>
+              {hasLocations && <a href="#clinic-locations" className="inline-block mt-6 text-blue-600 hover:underline">View contact details for all clinics</a>}
             </div>
 
             <div className="bg-white rounded-2xl p-8 shadow-lg">
@@ -142,7 +107,7 @@ export default function Contact() {
           </div>
 
           {/* Our Locations */}
-          <div className="mb-12">
+          <div id="clinic-locations" className="mb-12">
             <div className="text-center mb-8">
               <h2 className="text-3xl font-bold text-slate-800 mb-3">
                 {displayedLocations.length > 1 ? 'Our Locations' : 'Find Us'}
@@ -150,7 +115,7 @@ export default function Contact() {
               {displayedLocations.length > 1 && (
                 <p className="text-lg text-slate-600">
                   Visit us at any of our {displayedLocations.length} convenient
-                  clinic locations across Ottawa.
+                  clinic locations.
                 </p>
               )}
             </div>
@@ -193,6 +158,7 @@ export default function Contact() {
                             </a>
                           </div>
                         )}
+                        {loc.email && <div><span className="font-medium">Email:</span> <a className="text-blue-600 hover:underline break-all" href={`mailto:${loc.email}`}>{loc.email}</a></div>}
                         {loc.fax && (
                           <div>
                             <span className="font-medium">Fax:</span> {loc.fax}

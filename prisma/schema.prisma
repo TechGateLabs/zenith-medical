@@ -198,6 +198,7 @@ model ClinicLocation {
   name          String
   address       String
   phone         String?
+  email         String?
   fax           String?
   hours         String?
   mapsQuery     String?
