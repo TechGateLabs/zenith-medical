@@ -176,5 +176,6 @@ dist
 
 /src/generated/prisma
 .vercel
+.netlify/
 .env
 .env*.local

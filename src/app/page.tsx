@@ -273,7 +273,7 @@ export default async function Home() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {doctors.slice(0, 6).map((doctor) => {
+                {doctors.slice(0, 12).map((doctor) => {
                   const slug = doctor.name
                     .toLowerCase()
                     .replace(/\s+/g, "-")
