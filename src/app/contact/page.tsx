@@ -6,7 +6,6 @@ import {
   useCachedAddressOnly,
 } from '@/lib/hooks/useCachedAddress';
 import { useClinicLocations } from '@/lib/hooks/useClinicLocations';
-import GoogleMaps from '@/components/UI/GoogleMaps';
 import GoogleMapsLink from '@/components/UI/GoogleMapsLink';
 
 export default function Contact() {
@@ -109,13 +108,7 @@ export default function Contact() {
                         )}
                       </div>
                     </div>
-                    <div className="p-4 bg-slate-50 mt-auto">
-                      <GoogleMaps
-                        address={loc.mapsQuery || loc.address}
-                        className="w-full rounded-lg overflow-hidden"
-                        height="280px"
-                      />
-                    </div>
+
                   </section>
                 ))}
               </div>
