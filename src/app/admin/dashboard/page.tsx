@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { MapPin } from "lucide-react";
 import { useAuth } from "../../../lib/auth/use-auth";
 import { DashboardSkeleton } from "@/components/UI/SkeletonLoader";
 
@@ -78,6 +79,11 @@ export default function AdminDashboard() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Link href="/admin/content/locations" className="bg-white rounded-2xl border border-gray-200 p-6 hover:border-blue-300 hover:shadow-lg transition-all duration-300 group">
+            <div className="flex items-center mb-4"><div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-200"><MapPin className="w-6 h-6 text-blue-600" aria-hidden="true" /></div></div>
+            <h3 className="text-lg font-bold text-gray-900 mb-2">Manage Clinic Locations</h3>
+            <p className="text-gray-600 text-sm">Add locations, edit contact details and publish them on the website.</p>
+          </Link>
           <Link
             href="/admin/content/blog"
             className="bg-white rounded-2xl border border-gray-200 p-6 hover:border-blue-300 hover:shadow-lg transition-all duration-300 group"

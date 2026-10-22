@@ -1,3 +1,5 @@
+import { cache } from "react";
+import { findPublishedDoctorBySlug } from "@/lib/doctors/slug";
 import Layout from "../../../components/Layout/Layout";
 import Link from "next/link";
 import Image from "next/image";
@@ -15,21 +17,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const doctorName = slug.replace(/-/g, " ");
-
-  const doctor = await prisma.teamMember.findFirst({
-    where: {
-      isDoctor: true,
-      published: true,
-      name: {
-        contains: doctorName,
-        mode: "insensitive",
-      },
-    },
-    include: {
-      doctor: true,
-    },
-  });
+  const doctor = await getDoctor(slug);
 
   if (!doctor) {
     return {
@@ -56,23 +44,14 @@ export async function generateMetadata({
 }
 
 // Fetch doctor data
-async function getDoctor(slug: string) {
-  const doctorName = slug.replace(/-/g, " ");
+const getDoctor = cache(async (slug: string) => {
 
   try {
-    const doctor = await prisma.teamMember.findFirst({
-      where: {
-        isDoctor: true,
-        published: true,
-        name: {
-          contains: doctorName,
-          mode: "insensitive",
-        },
-      },
-      include: {
-        doctor: true,
-      },
+    const doctors = await prisma.teamMember.findMany({
+      where: { isDoctor: true, published: true },
+      include: { doctor: true },
     });
+    const doctor = findPublishedDoctorBySlug(doctors, slug);
 
     if (!doctor) {
       return null;
@@ -98,7 +77,7 @@ async function getDoctor(slug: string) {
     console.error("Failed to fetch doctor:", error);
     return null;
   }
-}
+});
 
 export default async function DoctorProfile({
   params,

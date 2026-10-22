@@ -60,6 +60,8 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ user }) => {
     },
 
 
+    { name: 'Clinic Locations', href: '/admin/content/locations', icon: MapPin },
+
     {
       name: 'Content Management',
       href: '/admin/content',
@@ -94,11 +96,6 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ user }) => {
           name: 'Doctor Profiles',
           href: '/admin/content/doctors',
           icon: Users,
-        },
-        {
-          name: 'Clinic Locations',
-          href: '/admin/content/locations',
-          icon: MapPin,
         },
       ],
     },

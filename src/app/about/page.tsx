@@ -1,3 +1,4 @@
+import { doctorProfileSlug } from '@/lib/doctors/slug'
 import Layout from '../../components/Layout/Layout'
 import Link from 'next/link'
 import { generateMetadata as generateSEOMetadata, generateDoctorStructuredData, PAGE_METADATA } from '../../lib/utils/seo'
@@ -283,7 +284,7 @@ export default async function About() {
                 .map((member) => (
                   <Link
                     key={member.id}
-                    href={`/doctors/${member.name.toLowerCase().replace(/\s+/g, '-')}`}
+                    href={`/doctors/${doctorProfileSlug(member.name)}`}
                     className="block"
                   >
                     <TeamMemberCard
