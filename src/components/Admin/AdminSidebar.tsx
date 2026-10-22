@@ -5,9 +5,9 @@
 
 'use client';
 
-import React, { useState} from 'react';
+import React, { Suspense, useState} from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { useSidebar } from '@/lib/contexts/SidebarContext';
 
@@ -28,6 +28,7 @@ import {
   X,
   DollarSign,
   MapPin,
+  Megaphone,
 } from 'lucide-react';
 
 interface NavigationItem {
@@ -46,8 +47,9 @@ interface AdminSidebarProps {
   };
 }
 
-const AdminSidebar: React.FC<AdminSidebarProps> = ({ user }) => {
+const AdminSidebarContent: React.FC<AdminSidebarProps> = ({ user }) => {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { collapsed, setCollapsed } = useSidebar();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -61,6 +63,7 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ user }) => {
 
 
     { name: 'Clinic Locations', href: '/admin/content/locations', icon: MapPin },
+    { name: 'Website Announcements', href: '/admin/settings?tab=announcement', icon: Megaphone },
 
     {
       name: 'Content Management',
@@ -114,6 +117,12 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ user }) => {
   const isCurrentPath = (href: string) => {
     if (href === '/admin/dashboard') {
       return pathname === href;
+    }
+    if (href === '/admin/settings?tab=announcement') {
+      return pathname === '/admin/settings' && searchParams.get('tab') === 'announcement';
+    }
+    if (href === '/admin/settings') {
+      return pathname === '/admin/settings' && searchParams.get('tab') !== 'announcement';
     }
     return pathname.startsWith(href);
   };
@@ -309,5 +318,9 @@ const AdminSidebar: React.FC<AdminSidebarProps> = ({ user }) => {
     </>
   );
 };
+
+const AdminSidebar: React.FC<AdminSidebarProps> = props => (
+  <Suspense fallback={null}><AdminSidebarContent {...props} /></Suspense>
+);
 
 export default AdminSidebar; 

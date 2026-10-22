@@ -5,7 +5,10 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { getSettingsTab, type SettingsTab } from '@/lib/settings/tabs';
+
+import React, { Suspense, useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -65,7 +68,11 @@ interface SecuritySettings {
   ipWhitelist: string;
 }
 
-export default function SettingsPage() {
+function SettingsPageContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const activeTab = getSettingsTab(searchParams.get("tab"));
+  const setActiveTab = (tab: SettingsTab) => router.replace(`/admin/settings?tab=${tab}`, { scroll: false });
   const [contactSettings, setContactSettings] = useState<ContactSettings>({
     primaryPhone: "",
     emergencyPhone: "",
@@ -105,9 +112,6 @@ export default function SettingsPage() {
             announcementDisplay: "popup",
   });
 
-  const [activeTab, setActiveTab] = useState<
-    "contact" | "announcement" | "system" | "security" | "database"
-  >("contact");
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{
@@ -118,24 +122,6 @@ export default function SettingsPage() {
 
   useEffect(() => {
     fetchSettings();
-
-    // Check URL for tab parameter
-    const urlParams = new URLSearchParams(window.location.search);
-    const tabParam = urlParams.get("tab");
-    if (
-      tabParam &&
-      ["contact", "system", "security", "database"].includes(
-        tabParam
-      )
-    ) {
-      setActiveTab(
-        tabParam as
-          | "contact"
-          | "system"
-          | "security"
-          | "database"
-      );
-    }
   }, []);
 
   const fetchSettings = async () => {
@@ -1196,4 +1182,8 @@ export default function SettingsPage() {
       </div>
     </div>
   );
+}
+
+export default function SettingsPage() {
+  return <Suspense fallback={<SettingsSkeleton />}><SettingsPageContent /></Suspense>;
 }

@@ -170,7 +170,7 @@ export default function AdminDashboard() {
           </Link>
 
           <Link
-            href="/admin/notifications"
+            href="/admin/settings?tab=announcement"
             className="bg-white rounded-2xl border border-gray-200 p-6 hover:border-yellow-300 hover:shadow-lg transition-all duration-300 group"
           >
             <div className="flex items-center mb-4">
@@ -191,10 +191,10 @@ export default function AdminDashboard() {
               </div>
             </div>
             <h3 className="text-lg font-bold text-gray-900 mb-2">
-              Notifications
+              Website Announcements
             </h3>
             <p className="text-gray-600 text-sm">
-              Manage appointment reminders
+              Edit the pop-up notices patients see on the website
             </p>
           </Link>
         </div>
