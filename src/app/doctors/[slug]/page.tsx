@@ -214,7 +214,7 @@ export default async function DoctorProfile({
                   Book Appointment
                 </a>
                 <Link
-                  href="/doctors"
+                  href="/about#our-doctors"
                   className="inline-flex items-center justify-center px-6 py-3 border border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold rounded-lg transition-colors"
                 >
                   <svg
@@ -412,7 +412,7 @@ export default async function DoctorProfile({
               Book Appointment
             </a>
             <Link
-              href="/doctors"
+              href="/about#our-doctors"
               className="inline-flex items-center justify-center px-6 py-3 border border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold rounded-lg transition-colors"
             >
               <svg
