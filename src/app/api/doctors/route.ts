@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { findPublishedDoctorBySlug } from '@/lib/doctors/slug';
 
 // GET /api/doctors - Fetch published doctor profiles
 export async function GET(request: NextRequest) {
@@ -8,20 +9,11 @@ export async function GET(request: NextRequest) {
     const slug = searchParams.get('slug');
 
     if (slug) {
-      // Fetch specific doctor by slug (name converted to slug)
-      const doctor = await prisma.teamMember.findFirst({
-        where: {
-          isDoctor: true,
-          published: true,
-          name: {
-            contains: slug.replace(/-/g, ' '),
-            mode: 'insensitive'
-          }
-        },
-        include: {
-          doctor: true
-        }
+      const doctors = await prisma.teamMember.findMany({
+        where: { isDoctor: true, published: true },
+        include: { doctor: true },
       });
+      const doctor = findPublishedDoctorBySlug(doctors, slug);
 
       if (!doctor) {
         return NextResponse.json(

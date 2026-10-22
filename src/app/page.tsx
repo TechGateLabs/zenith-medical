@@ -1,3 +1,4 @@
+import { doctorProfileSlug } from "@/lib/doctors/slug";
 import Layout from "../components/Layout/Layout";
 import Link from "next/link";
 import {
@@ -71,6 +72,7 @@ interface ClinicLocation {
   name: string;
   address: string;
   phone: string | null;
+  email: string | null;
   fax: string | null;
   hours: string | null;
   mapsQuery: string | null;
@@ -116,6 +118,7 @@ export default async function Home() {
             name: "Zenith Medical Centre",
             address: "Unit 216, 1980 Ogilvie Road, Gloucester, Ottawa, K1J 9L3",
             phone: null,
+            email: null,
             fax: null,
             hours: null,
             mapsQuery: null,
@@ -273,18 +276,15 @@ export default async function Home() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {doctors.slice(0, 6).map((doctor) => {
-                  const slug = doctor.name
-                    .toLowerCase()
-                    .replace(/\s+/g, "-")
-                    .replace(/[^a-z0-9-]/g, "");
+                {doctors.slice(0, 12).map((doctor) => {
+                  const profileHref = `/doctors/${doctorProfileSlug(doctor.name)}`;
                   return (
                     <div
                       key={doctor.id}
                       className="bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
                     >
                       {/* Doctor Photo */}
-                      <div className="relative h-64 bg-slate-100">
+                      <Link href={profileHref} aria-label={`View ${doctor.name} profile`} className="block relative h-64 bg-slate-100 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-inset">
                         {doctor.photoUrl ? (
                           <Image
                             src={doctor.photoUrl}
@@ -309,11 +309,11 @@ export default async function Home() {
                             </svg>
                           </div>
                         )}
-                      </div>
+                      </Link>
                       <div className="p-6">
                         <div className="mb-4">
                           <h3 className="text-xl font-bold text-slate-800 mb-1">
-                            {doctor.name}
+                            <Link href={profileHref} className="text-slate-800 hover:text-blue-600 hover:underline">{doctor.name}</Link>
                           </h3>
                           <p className="text-blue-600 font-medium mb-3">
                             {doctor.title}
@@ -326,6 +326,7 @@ export default async function Home() {
                         </div>
 
                         <div className="mt-4 pt-4 border-t border-slate-100">
+                          <Link href={profileHref} className="inline-flex text-blue-600 hover:text-blue-700 hover:underline font-medium mb-4" aria-label={`Read more about ${doctor.name}`}>View profile →</Link>
                           <a
                             href={
                               doctor.doctor?.bookingUrl || appointmentBookingUrl
@@ -847,6 +848,7 @@ export default async function Home() {
                               </a>
                             </div>
                           )}
+                          {loc.email && <div><span className="font-medium">Email:</span> <a className="text-blue-600 hover:underline break-all" href={`mailto:${loc.email}`}>{loc.email}</a></div>}
                           {loc.fax && (
                             <div>
                               <span className="font-semibold">Fax:</span>{" "}

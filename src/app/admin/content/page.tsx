@@ -17,7 +17,8 @@ import {
   TrendingUp,
   ArrowLeft,
   Calendar,
-  Eye
+  Eye,
+  MapPin
 } from 'lucide-react';
 import { CardGridSkeleton, ListSkeleton } from '@/components/UI/SkeletonLoader';
 
@@ -128,6 +129,15 @@ export default function ContentManagementPage() {
   };
 
   const contentSections = [
+    {
+      title: 'Clinic Locations',
+      description: 'Add locations and edit each clinic’s address, phone, email and hours',
+      icon: MapPin,
+      href: '/admin/content/locations',
+      count: null,
+      color: 'blue',
+      actions: [{ label: 'Manage Locations', href: '/admin/content/locations', icon: Plus }]
+    },
     {
       title: 'Team Members',
       description: 'Manage healthcare professionals and staff profiles',
@@ -355,10 +365,10 @@ export default function ContentManagementPage() {
                 </div>
                 <div className="ml-4">
                   <h3 className="text-lg font-bold text-gray-900">{section.title}</h3>
-                  <div className="flex items-center">
+                  {section.count !== null && <div className="flex items-center">
                     <span className="text-2xl font-bold text-gray-900">{section.count}</span>
                     <span className="text-sm text-gray-500 ml-1">items</span>
-                  </div>
+                  </div>}
                 </div>
               </div>
               

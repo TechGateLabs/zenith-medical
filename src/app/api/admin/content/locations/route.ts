@@ -1,31 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
 import { z } from 'zod'
-import { authOptions } from '@/lib/auth/config'
 import { prisma } from '@/lib/prisma'
-
-const LocationSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(120),
-  address: z.string().min(1, 'Address is required').max(500),
-  phone: z.string().max(50).optional().or(z.literal('')),
-  fax: z.string().max(50).optional().or(z.literal('')),
-  hours: z.string().max(500).optional().or(z.literal('')),
-  mapsQuery: z.string().max(500).optional().or(z.literal('')),
-  orderIndex: z.number().int().min(0).default(0),
-  isPrimary: z.boolean().default(false),
-  published: z.boolean().default(true),
-})
-
-async function requireAdmin() {
-  const session = await getServerSession(authOptions)
-  if (!session) {
-    return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
-  }
-  return null
-}
+import { LocationSchema } from '@/lib/locations/validation'
+import { requireLocationAdmin } from '@/lib/locations/authorization'
 
 export async function GET() {
-  const unauthorized = await requireAdmin()
+  const unauthorized = await requireLocationAdmin()
   if (unauthorized) return unauthorized
 
   try {
@@ -43,7 +23,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const unauthorized = await requireAdmin()
+  const unauthorized = await requireLocationAdmin()
   if (unauthorized) return unauthorized
 
   try {
@@ -62,6 +42,7 @@ export async function POST(request: NextRequest) {
           name: data.name,
           address: data.address,
           phone: data.phone || null,
+          email: data.email || null,
           fax: data.fax || null,
           hours: data.hours || null,
           mapsQuery: data.mapsQuery || null,

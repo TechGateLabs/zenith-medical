@@ -1,3 +1,4 @@
+import { doctorProfileSlug } from '@/lib/doctors/slug'
 import Layout from '../../components/Layout/Layout'
 import Link from 'next/link'
 import { generateMetadata as generateSEOMetadata, generateDoctorStructuredData, PAGE_METADATA } from '../../lib/utils/seo'
@@ -261,7 +262,7 @@ export default async function About() {
 
         {/* Our Doctors */}
         {teamMembers.filter((m: { isDoctor: boolean }) => m.isDoctor).length > 0 && (
-          <section className="mb-20 lg:mb-32">
+          <section id="our-doctors" className="mb-20 lg:mb-32">
             <div className="text-center mb-16">
               <div className="inline-flex items-center px-4 py-2 bg-blue-100 rounded-full text-blue-700 text-sm font-medium mb-6">
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -283,7 +284,7 @@ export default async function About() {
                 .map((member) => (
                   <Link
                     key={member.id}
-                    href={`/doctors/${member.name.toLowerCase().replace(/\s+/g, '-')}`}
+                    href={`/doctors/${doctorProfileSlug(member.name)}`}
                     className="block"
                   >
                     <TeamMemberCard

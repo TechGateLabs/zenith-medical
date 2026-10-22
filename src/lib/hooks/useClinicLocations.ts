@@ -7,6 +7,7 @@ export interface ClinicLocation {
   name: string
   address: string
   phone: string | null
+  email: string | null
   fax: string | null
   hours: string | null
   mapsQuery: string | null
@@ -15,11 +16,7 @@ export interface ClinicLocation {
   published: boolean
 }
 
-let cache: { data: ClinicLocation[] | null; expiry: number } = {
-  data: null,
-  expiry: 0,
-}
-const TTL = 5 * 60 * 1000
+let cache: { data: ClinicLocation[] | null } = { data: null }
 
 export function useClinicLocations(): {
   locations: ClinicLocation[]
@@ -31,20 +28,16 @@ export function useClinicLocations(): {
   const [loading, setLoading] = useState(cache.data === null)
 
   useEffect(() => {
-    const now = Date.now()
-    if (cache.data && now < cache.expiry) {
-      setLocations(cache.data)
-      setLoading(false)
-      return
-    }
-
     let cancelled = false
-    fetch('/api/locations')
-      .then((res) => res.json())
+    fetch('/api/locations', { cache: 'no-store' })
+      .then((res) => {
+        if (!res.ok) throw new Error('Unable to load clinic locations')
+        return res.json()
+      })
       .then((json) => {
         if (cancelled) return
         const data: ClinicLocation[] = json?.data ?? []
-        cache = { data, expiry: Date.now() + TTL }
+        cache = { data }
         setLocations(data)
       })
       .catch((err) => console.error('Failed to fetch clinic locations:', err))

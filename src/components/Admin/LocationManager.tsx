@@ -21,6 +21,7 @@ interface ClinicLocation {
   name: string
   address: string
   phone: string | null
+  email: string | null
   fax: string | null
   hours: string | null
   mapsQuery: string | null
@@ -35,6 +36,7 @@ interface LocationFormData {
   name: string
   address: string
   phone: string
+  email: string
   fax: string
   hours: string
   mapsQuery: string
@@ -47,12 +49,13 @@ const emptyForm: LocationFormData = {
   name: '',
   address: '',
   phone: '',
+  email: '',
   fax: '',
   hours: '',
   mapsQuery: '',
   orderIndex: 0,
   isPrimary: false,
-  published: true,
+  published: false,
 }
 
 export default function LocationManager() {
@@ -118,6 +121,7 @@ export default function LocationManager() {
       name: location.name,
       address: location.address,
       phone: location.phone || '',
+      email: location.email || '',
       fax: location.fax || '',
       hours: location.hours || '',
       mapsQuery: location.mapsQuery || '',
@@ -214,8 +218,8 @@ export default function LocationManager() {
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Clinic Locations</h1>
           <p className="text-gray-600">
-            Manage all clinic locations shown on the website. The location marked
-            as primary appears in the footer and as the default contact address.
+            Add and edit clinic contact details. Published locations appear in the
+            footer and on the website; drafts stay private until you publish them.
           </p>
         </div>
         <div className="flex gap-2">
@@ -288,7 +292,8 @@ export default function LocationManager() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
                     {loc.phone && <div>Tel: {loc.phone}</div>}
                     {loc.fax && <div>Fax: {loc.fax}</div>}
-                    {!loc.phone && !loc.fax && (
+                    {loc.email && <div className="whitespace-normal break-all">Email: {loc.email}</div>}
+                    {!loc.phone && !loc.fax && !loc.email && (
                       <span className="text-gray-400">—</span>
                     )}
                   </td>
@@ -440,6 +445,18 @@ export default function LocationManager() {
                 placeholder="613-212-1234"
               />
             </div>
+          </div>
+
+          <div>
+            <label htmlFor="clinic-email" className="block text-sm font-medium text-gray-700 mb-2">
+              Public Clinic Email
+            </label>
+            <input id="clinic-email" type="email" maxLength={254}
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <p className="text-xs text-gray-500 mt-1">Shown publicly for this clinic. Leave blank to hide it.</p>
           </div>
 
           <div>

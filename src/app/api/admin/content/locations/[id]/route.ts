@@ -1,34 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
 import { z } from 'zod'
-import { authOptions } from '@/lib/auth/config'
 import { prisma } from '@/lib/prisma'
-
-const LocationUpdateSchema = z.object({
-  name: z.string().min(1).max(120).optional(),
-  address: z.string().min(1).max(500).optional(),
-  phone: z.string().max(50).optional().or(z.literal('')),
-  fax: z.string().max(50).optional().or(z.literal('')),
-  hours: z.string().max(500).optional().or(z.literal('')),
-  mapsQuery: z.string().max(500).optional().or(z.literal('')),
-  orderIndex: z.number().int().min(0).optional(),
-  isPrimary: z.boolean().optional(),
-  published: z.boolean().optional(),
-})
-
-async function requireAdmin() {
-  const session = await getServerSession(authOptions)
-  if (!session) {
-    return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
-  }
-  return null
-}
+import { LocationUpdateSchema } from '@/lib/locations/validation'
+import { requireLocationAdmin } from '@/lib/locations/authorization'
 
 export async function GET(
   _request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  const unauthorized = await requireAdmin()
+  const unauthorized = await requireLocationAdmin()
   if (unauthorized) return unauthorized
   const { id } = await context.params
 
@@ -51,7 +31,7 @@ export async function PUT(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  const unauthorized = await requireAdmin()
+  const unauthorized = await requireLocationAdmin()
   if (unauthorized) return unauthorized
   const { id } = await context.params
 
@@ -72,6 +52,7 @@ export async function PUT(
           ...(data.name !== undefined && { name: data.name }),
           ...(data.address !== undefined && { address: data.address }),
           ...(data.phone !== undefined && { phone: data.phone || null }),
+          ...(data.email !== undefined && { email: data.email || null }),
           ...(data.fax !== undefined && { fax: data.fax || null }),
           ...(data.hours !== undefined && { hours: data.hours || null }),
           ...(data.mapsQuery !== undefined && { mapsQuery: data.mapsQuery || null }),
@@ -102,7 +83,7 @@ export async function DELETE(
   _request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
-  const unauthorized = await requireAdmin()
+  const unauthorized = await requireLocationAdmin()
   if (unauthorized) return unauthorized
   const { id } = await context.params
 
